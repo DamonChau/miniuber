@@ -1,0 +1,3 @@
+﻿Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 5.0.10
+Install-Package Microsoft.EntityFrameworkCore.Tools -Version 5.0.10
+dotnet ef dbcontext scaffold "Server=.;Database=MiniUber;User=sa;Password=123456;Encrypt=False" Microsoft.EntityFrameworkCore.SqlServer -o Models -f --no-onconfiguring
