@@ -5,10 +5,18 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MiniUberAPI.Common;
+using MiniUberAPI.Hub;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//SignalR
+builder.Services.AddSignalR().AddJsonProtocol(options =>
+{
+    options.PayloadSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.PayloadSerializerOptions.WriteIndented = true;
+});
+
+// Add services to the container. JSON loop
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -23,8 +31,8 @@ builder.Services.AddDbContext<MiniUberContext>(opt =>
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {
     o.TokenValidationParameters = new TokenValidationParameters
@@ -41,12 +49,14 @@ options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     };
 });
 
+//JWT authentication encode
 builder.Services.AddScoped<JwtService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//CORS
 builder.Services.AddCors(p => p.AddPolicy("corsappDev", builder =>
 {
     builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
@@ -54,7 +64,7 @@ builder.Services.AddCors(p => p.AddPolicy("corsappDev", builder =>
 
 builder.Services.AddCors(p => p.AddPolicy("corsappPrd", builder =>
 {
-    builder.WithOrigins("https://MiniUber.com").AllowAnyMethod().AllowAnyHeader();
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
 
 
@@ -75,6 +85,13 @@ else
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
+
+//SignalR
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<MessageHub>("/TripHub");
+});
 
 app.MapControllers();
 

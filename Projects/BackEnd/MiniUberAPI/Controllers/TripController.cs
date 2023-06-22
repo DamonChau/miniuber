@@ -32,6 +32,21 @@ namespace MiniUberAPI.Controllers
 
         }
 
+        [HttpGet]
+        [Route("api/Trips/GetAllBookingTrips")]
+        public async Task<ActionResult<IEnumerable<Trip>>> GetAllBookingTrips()
+        {
+            try
+            {
+                return Ok(await _objectTrip.GetAllTripsByStatus(0));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { error = e.Message });
+            }
+
+        }
+
 
         [Authorize]
         [HttpPost]
