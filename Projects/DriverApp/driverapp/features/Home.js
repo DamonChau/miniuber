@@ -73,11 +73,10 @@ const Home = ({ navigation }) => {
   const [connection, setConnection] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
-
   const getBookings = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5230/api/Trips/GetAllBookingTrips"
+        "http://192.168.20.107:5230/api/Trips/GetAllBookingTrips"
       );
       const json = await response.json();
       setBookings(json);
@@ -92,7 +91,7 @@ const Home = ({ navigation }) => {
   const startSearchUpBookings = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5230/api/registerAllTrips"
+        "http://192.168.20.107:5230/api/registerAllTrips"
       );
       const json = await response.json();
       console.log(json);
@@ -104,7 +103,7 @@ const Home = ({ navigation }) => {
 
   const stopBookings = () => {
     try {
-      const response = fetch("http://localhost:5230/api/unregisterAllTrips");
+      const response = fetch("http://192.168.20.107:5230/api/unregisterAllTrips");
       console.log("stopBookings");
     } catch (error) {
       console.error(error);
@@ -114,7 +113,7 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5230/TripHub", {
+      .withUrl("http://192.168.20.107:5230/TripHub", {
         skipNegotiation: true,
         transport: HttpTransportType.WebSockets,
       })

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
-//import MapView from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 
 const dummyLatitude = 37.7749; // Replace this with your desired latitude value
 const dummyLongitude = -122.4194; // Replace this with your desired longitude value
@@ -27,7 +27,8 @@ const DetailScreen = ({ route, navigation }) => {
         <Text style={styles.label}>Add To:</Text>
         <Text style={styles.value}>{item.addTo}</Text>
 
-        {/* <MapView
+        <MapView
+         provider={PROVIDER_GOOGLE}
           style={styles.map}
           initialRegion={{
             latitude,
@@ -35,7 +36,7 @@ const DetailScreen = ({ route, navigation }) => {
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           }}
-        ></MapView> */}
+        ></MapView>
       </View>
       <TouchableOpacity style={styles.acceptButton}>
         <Text style={styles.acceptButtonText}>Accept</Text>
